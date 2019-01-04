@@ -2,7 +2,7 @@
   "name": "my-react-app",
   "version": "1.0.0",
   "main": "index.js",
-  "author": "",
+  "author": "Rajesh Panda<rajesh.situ@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.44",
@@ -40,9 +40,9 @@
   "scripts": {
     "start": "webpack-dev-server --config config/webpack.config.dev.js --open 'Google Chrome'",
     "build": "webpack --config config/webpack.config.prod.js",
-    "test": "jest",
+    "test": "jest --env=node",
     "lint": "eslint src/",
-    "coverage": "jest --coverage && open coverage/lcov-report/index.html"
+    "coverage": "jest --env=node --coverage && open coverage/lcov-report/index.html"
   },
   "dependencies": {
     "prop-types": "^15.6.1",
