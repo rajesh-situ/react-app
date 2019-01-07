@@ -1,46 +1,40 @@
-machine:
-  pre:
-      - sudo curl -L -o /usr/bin/docker 'https://s3.amazonaws.com/circle-downloads/docker-1.9.1-circleci'
-      - sudo chmod 0755 /usr/bin/docker
-      - "curl -s -k -L -o build-tools.zip https://github.mdl.cloud/deployer/build-tools/archive/master.zip && unzip build-tools.zip && rm build-tools.zip"
-  services:
-    - docker
-  environment:
-    # CC_TEST_REPORTER_ID: c994740b844f245d2701bd35bcd17695ea817a88e4310dc6efe4165a29ce6408
-    # CC_TEST_REPORTER_COVERAGE_ENDPOINT: https://codeclimate.mdl.cloud/api/v1/test_reports
-  node:
-    version: 8.11.2
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/node:7.10
+      
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/mongo:3.4.4
 
-dependencies:
-  pre:
-    - curl -o- -L https://yarnpkg.com/install.sh | bash
-  override:
-    - yarn install
-  post:
-    - npm run build
-    - cp Dockerfile ./dist
-    # - cp nginx.conf dist/nginx.conf
-    # - cp htpasswdHss dist/htpasswdHss
-    - cd dist && ../../build-tools-master/docker/build.sh
-    # - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-    # - chmod +x ./cc-test-reporter
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: yarn install
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+        
+      # run tests!
+      - run: yarn test
 
 
 
-test:
-  override:
-    - yarn test --coverage
-  pre:
-    # - ./cc-test-reporter before-build
-  post:
-    # - ./cc-test-reporter after-build --exit-code $?
-
-deployment:
-  pipeline:
-    branch: [master]
-    commands:
-      - cd dist && ../../build-tools-master/docker/push.sh
-
-notify:
-  webhooks:
-    - url: https://deployer.mdl.cloud/trigger
