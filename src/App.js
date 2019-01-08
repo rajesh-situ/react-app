@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 class App extends React.Component {
   render() {
     const { name } = this.props.sample;
-    console.log(name);
 
     return (
-      <div>Hello World!!</div>
+      <div>Hello {name}</div>
     );
   }
 }
@@ -18,9 +17,7 @@ export const mapStateToProps = ({ sample }) => ({
 });
 
 App.propTypes = {
-  sample: propTypes.object({
-    name: propTypes.string
-  })
+  sample: PropTypes.object
 };
 
 App.defaultProps = {

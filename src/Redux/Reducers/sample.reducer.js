@@ -1,4 +1,4 @@
-import { SAMPLE_ACTION_TYPE } from '../Actions/index.actions';
+import { SET_NAME } from '../Actions/index.actions';
 
 const initialState = {
   name: 'world'
@@ -7,7 +7,7 @@ const initialState = {
 // sample reducer, should be removed
 export default function sample(state = initialState, action) {
   switch (action.type) {
-    case SAMPLE_ACTION_TYPE:
+    case SET_NAME:
       return { ...state, name: action.paylod.name };
     default:
       return state;
