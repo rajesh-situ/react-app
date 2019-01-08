@@ -1,4 +1,4 @@
-import {createAction} from 'redux-actions'
+import { createAction } from 'redux-actions';
 
 // sample action
 export const SET_NAME = 'SET_NAME';
