@@ -8,7 +8,7 @@ const initialState = {
 export default function sample(state = initialState, action) {
   switch (action.type) {
     case SET_NAME:
-      return { ...state, name: action.paylod.name };
+      return { ...state, name: action.payload.name };
     default:
       return state;
   }
