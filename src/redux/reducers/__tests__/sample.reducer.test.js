@@ -9,5 +9,12 @@ describe('sample reducer', () => {
     const action = setName({ name: 'testName' });
     expect(sampleReducer({}, action)).toEqual(expectedState);
   });
+  it('should return default state if no valid action is passed', () => {
+    const expectedState = {};
+    const action = {
+      type: 'Random action type'
+    };
+    expect(sampleReducer({}, action)).toEqual(expectedState);
+  });
 });
 
