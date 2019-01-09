@@ -11,7 +11,7 @@ const mockStore = createStore(() => ({
 
 describe('App page', () => {
   it('should render without any issue', () => {
-    const rendered = shallow(<App store={mockStore} />);
+    const rendered = shallow(<App store={mockStore} />).dive();
     expect(rendered.exists()).toBe(true);
   });
 });
