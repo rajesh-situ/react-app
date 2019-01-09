@@ -1,4 +1,4 @@
-import { SET_NAME } from '../Actions/index.actions';
+import { SET_NAME } from '../actions/index.actions';
 
 const initialState = {
   name: 'world'
