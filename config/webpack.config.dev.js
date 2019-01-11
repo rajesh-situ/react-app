@@ -26,7 +26,8 @@ module.exports = {
     },
     contentBase: dir.STATIC,
     hot: true,
-    compress: true // enable gzip compression
+    compress: true, // enable gzip compression
+    historyApiFallback: true
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin({}), // Keep this in the top of the array
