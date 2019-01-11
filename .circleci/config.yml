@@ -43,10 +43,10 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-          - v1-{{checksum "package-lock.json"}}
+          - v1-dependencies-{{ checksum "package.json" }}
       - run:
           name: 'Running eslint'
-          command: npm run lint
+          command: yarn lint
 
 workflows:
   version: 2
