@@ -1,61 +1,92 @@
 dockerImageAndWorkDir: &dockerImageAndWorkDir
     docker:
-      - image: circleci/node:8.12.0
+        - image: circleci/node:10.0.0
     working_directory: ~/repo
 
 version: 2.1
+
+commands:
+    get-code:
+        steps:
+            - attach_workspace:
+                at: ~/user-ms
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "package.json" }}
+
 jobs:
-  install-dependencies:
-    <<: *dockerImageAndWorkDir
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-      - run: yarn install
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - persist_to_workspace: 
-          root: ~/repo
-          paths:
-            - .
+    install-dependencies:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "package.json" }}
+            - run: yarn install
+            - save_cache:
+                paths:
+                    - node_modules
+                key: v1-dependencies-{{ checksum "package.json" }}
+            - persist_to_workspace: 
+                root: ~/repo
+                paths:
+                    - .
 
-  test:
-    <<: *dockerImageAndWorkDir
-    steps:
-      - attach_workspace:
-          at: ~/repo
-      - checkout
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: 'Running testcases'
-          command: yarn test
+    test:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - get-code
+            - run:
+                name: 'Running testcases'
+                command: yarn test
 
-  lint:
-    <<: *dockerImageAndWorkDir
-    steps:
-      - attach_workspace:
-          at: ~/user-ms
-      - checkout
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-      - run:
-          name: 'Running eslint'
-          command: yarn lint
+    lint:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - get-code
+            - run:
+                name: 'Running eslint'
+                command: yarn lint
+
+    build:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - get-code
+            - run:
+                name: 'Create build'
+                command: yarn build
+
+    dockerize:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - get-code
+            - run:
+                name: 'Create docker image'
+                command: docker build -t react-app .
+
 
 workflows:
-  version: 2
-  test-and-build:
-    jobs:
-      - install-dependencies
-      - lint:
-          requires:
-              - install-dependencies
-      - test:
-          requires:
-              - install-dependencies
+    version: 2
+    test-and-build:
+        jobs:
+            - install-dependencies
+            - lint:
+                requires:
+                    - install-dependencies
+            - test:
+                requires:
+                    - install-dependencies
+            - build:
+                requires:
+                    - lint
+                    - test
+                filters:
+                    branches:
+                        - feature/circle-ci
+            - dockerize:
+                requires:
+                    - build
+                filters:
+                    branches:
+                        - feature/circle-ci
