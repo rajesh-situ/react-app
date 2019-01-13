@@ -2,13 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import getStore from './src/redux/store';
-import App from './src/App'; //eslint-disable-line
+import AppContainer from './src/App';
 
 const store = getStore();
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <AppContainer />
   </Provider>,
   document.getElementById('root')
 );
