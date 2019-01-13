@@ -83,10 +83,12 @@ workflows:
                     - test
                 filters:
                     branches:
-                        - 'feature/circle-ci'
+                        only:
+                            - 'feature/circle-ci'
             - dockerize:
                 requires:
                     - build
                 filters:
                     branches:
-                        - 'feature/circle-ci'
+                        only:
+                            - 'feature/circle-ci'
