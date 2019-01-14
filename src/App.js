@@ -1,13 +1,15 @@
 import React from 'react';
+import { ConnectedRouter } from 'connected-react-router';
 import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
+import Router from './router/index.router';
+import { history } from './redux/store';
 
-class App extends React.Component {
+export class App extends React.Component {
   render() {
-    const { name } = this.props.sample;
-
     return (
-      <div>Hello {name}</div>
+      <ConnectedRouter history={history}>
+        <Router />
+      </ConnectedRouter>
     );
   }
 }
@@ -15,13 +17,5 @@ class App extends React.Component {
 export const mapStateToProps = ({ sample }) => ({
   sample
 });
-
-App.propTypes = {
-  sample: PropTypes.object
-};
-
-App.defaultProps = {
-  sample: null
-};
 
 export default connect(mapStateToProps, null)(App);
