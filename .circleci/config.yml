@@ -59,6 +59,7 @@ jobs:
 
     dockerize:
         <<: *dockerImageAndWorkDir
+        machine: true
         steps:
             - get-code
             - run:
