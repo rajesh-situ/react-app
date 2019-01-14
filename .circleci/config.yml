@@ -58,7 +58,7 @@ jobs:
                 command: yarn build
 
     dockerize:
-        <<: *dockerImageAndWorkDir
+        working_directory: ~/repo
         machine: true
         steps:
             - get-code
