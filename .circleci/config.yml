@@ -9,7 +9,7 @@ commands:
     get-code:
         steps:
             - attach_workspace:
-                at: ~/user-ms
+                at: ~/repo
             - checkout
             - restore_cache:
                 keys:
