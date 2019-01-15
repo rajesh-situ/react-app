@@ -1,40 +1,95 @@
-# Javascript Node CircleCI 2.0 configuration file
-#
-# Check https://circleci.com/docs/2.0/language-javascript/ for more details
-#
-version: 2
-jobs:
-  build:
+dockerImageAndWorkDir: &dockerImageAndWorkDir
     docker:
-      # specify the version you desire here
-      - image: circleci/node:8.12.0
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/mongo:3.4.4
-
+        - image: circleci/node:10.0.0
     working_directory: ~/repo
 
-    steps:
-      - checkout
+version: 2.1
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
+commands:
+    get-code:
+        steps:
+            - attach_workspace:
+                at: ~/repo
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "package.json" }}
 
-      - run: yarn install
+jobs:
+    install-dependencies:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - checkout
+            - restore_cache:
+                keys:
+                - v1-dependencies-{{ checksum "package.json" }}
+            - run: yarn install
+            - save_cache:
+                paths:
+                    - node_modules
+                key: v1-dependencies-{{ checksum "package.json" }}
+            - persist_to_workspace: 
+                root: ~/repo
+                paths:
+                    - .
 
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-        
-      # run tests!
-      - run: yarn test --coverage
+    test:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - get-code
+            - run:
+                name: 'Running testcases'
+                command: yarn test
+
+    lint:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - get-code
+            - run:
+                name: 'Running eslint'
+                command: yarn lint
+
+    build:
+        <<: *dockerImageAndWorkDir
+        steps:
+            - get-code
+            - run:
+                name: 'Create build'
+                command: yarn build
+
+    dockerize:
+        working_directory: ~/repo
+        machine: true
+        steps:
+            - get-code
+            - run:
+                name: 'Create docker image'
+                command: docker build -t react-app .
 
 
-
+workflows:
+    version: 2
+    test-and-build:
+        jobs:
+            - install-dependencies
+            - lint:
+                requires:
+                    - install-dependencies
+            - test:
+                requires:
+                    - install-dependencies
+            - build:
+                requires:
+                    - lint
+                    - test
+                filters:
+                    branches:
+                        only:
+                            - 'feature/circle-ci'
+            - dockerize:
+                requires:
+                    - build
+                filters:
+                    branches:
+                        only:
+                            - 'feature/circle-ci'
