@@ -50,6 +50,7 @@
   "dependencies": {
     "connected-react-router": "^6.1.0",
     "history": "^4.7.2",
+    "jsdom-global": "^3.0.2",
     "prop-types": "^15.6.1",
     "react": "16.6.0",
     "react-dom": "^16.3.1",

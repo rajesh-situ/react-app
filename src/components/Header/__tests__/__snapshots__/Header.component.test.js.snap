@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`The header component should render correctly 1`] = `
+<div
+  className="Headerstyles__Container-sc-13gsfyb-0 gNvquE"
+>
+  <h1
+    className="Headerstyles__Title-sc-13gsfyb-1 kFhJju"
+  >
+    
+  </h1>
+</div>
+`;

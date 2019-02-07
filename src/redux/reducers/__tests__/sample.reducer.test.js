@@ -4,9 +4,10 @@ import { setName } from '../../actions/index.actions';
 describe('sample reducer', () => {
   it('should  set name from the action\'s payload', () => {
     const expectedState = {
-      name: 'testName'
+      name: 'testName',
+      headerText: 'testName'
     };
-    const action = setName({ name: 'testName' });
+    const action = setName({ name: 'testName', headerText: 'testName' });
     expect(sampleReducer({}, action)).toEqual(expectedState);
   });
   it('should return default state if no valid action is passed', () => {
