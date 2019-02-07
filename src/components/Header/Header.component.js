@@ -8,7 +8,7 @@ export default class Header extends Component {
     return (
       <styles.Container>
         <styles.Title>
-            {headerText}
+          {headerText}
         </styles.Title>
       </styles.Container>
     );
@@ -16,9 +16,9 @@ export default class Header extends Component {
 }
 
 Header.propTypes = {
-    headerText: PropTypes.string,
+  headerText: PropTypes.string
 };
 
 Header.defaultProps = {
-    headerText: '',
+  headerText: ''
 };

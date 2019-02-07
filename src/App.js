@@ -12,7 +12,7 @@ export class App extends React.Component {
     const { headerText } = this.props;
     return (
       <StyleVariableContainer>
-        <AppHeader headerText={headerText}/>
+        <AppHeader headerText={headerText} />
         <ConnectedRouter history={history}>
           <Router />
         </ConnectedRouter>

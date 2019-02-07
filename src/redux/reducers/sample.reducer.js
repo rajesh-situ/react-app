@@ -8,13 +8,10 @@ const initialState = {
 // sample reducer, should be removed
 export default function sample(state = initialState, { payload, type }) {
   switch (type) {
-    case SET_NAME:
+    case SET_NAME: {
       const { name, headerText } = payload;
-      return { 
-        ...state, 
-        name,
-        headerText 
-      };
+      return { ...state, name, headerText };
+    }
     default:
       return state;
   }
